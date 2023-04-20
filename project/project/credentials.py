@@ -1,0 +1,1 @@
+DJANGO_SECRET_KEY = 'lj!EL6{Bh+U^@-yuNWAn*r89%0vEprRDwk4tV2VBIR7&!h!XnJ'
