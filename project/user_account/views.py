@@ -4,7 +4,7 @@ from rest_framework import status
 from user_account import serializers
 from django.contrib.auth.models import User
 
-class AccountView(generics.ListCreateAPIView):
+class AccountDetails(generics.ListCreateAPIView):
     serializer_class = serializers.UserSerializer
     queryset = User.objects.all()
 
