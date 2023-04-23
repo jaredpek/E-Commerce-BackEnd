@@ -1,10 +1,10 @@
 from rest_framework import generics, response, status
-from restaurant.serializers import ListRestaurantSerializer, CreateUpdateRestaurantSerializer
+from restaurant.serializers import RestaurantSerializer, CreateRestaurantSerializer
 from restaurant.models import Restaurant
 
 class ListCreateRestaurants(generics.ListCreateAPIView):
     queryset = Restaurant.objects.all()
-    serializer_class = ListRestaurantSerializer
+    serializer_class = RestaurantSerializer
 
     def get_queryset(self):
         params = self.request.GET
@@ -16,7 +16,7 @@ class ListCreateRestaurants(generics.ListCreateAPIView):
     
     def post(self, request, *args, **kwargs):
         data = self.request.POST
-        restaurant_serializer = CreateUpdateRestaurantSerializer(data=data)
+        restaurant_serializer = CreateRestaurantSerializer(data=data)
         if restaurant_serializer.is_valid(raise_exception=True):
             Restaurant.objects.create(
                 owner=self.request.user,
@@ -26,12 +26,17 @@ class ListCreateRestaurants(generics.ListCreateAPIView):
                 postal_code=data['postal_code'],
             )
             return response.Response({'Success': 'New restaurant created'}, status.HTTP_200_OK)
-        return response.Response({'Error': [restaurant_serializer.errors]}, status.HTTP_200_OK)
+        return response.Response({'Error': [restaurant_serializer.errors]}, status.HTTP_406_NOT_ACCEPTABLE)
 
-class UpdateRestaurants(generics.CreateAPIView):
+class UpdateRestaurants(generics.UpdateAPIView):
     queryset = Restaurant.objects.all()
-    serializer_class = CreateUpdateRestaurantSerializer
-
-    def post(self, request, *args, **kwargs):
-        print(self.request.POST)
-        return response.Response({'test', 'test'}, status.HTTP_202_ACCEPTED)
+    serializer_class = RestaurantSerializer
+    
+    def put(self, request, *args, **kwargs):
+        data = self.request.POST
+        restaurant_id = data.get('id')
+        restaurant = Restaurant.objects.get(id=restaurant_id)
+        owner = restaurant.owner
+        if self.request.user == owner:
+            return super().put(request, *args, **kwargs)
+        return response.Response({'Error': 'You are not the owner of this restaurant'}, status.HTTP_401_UNAUTHORIZED)
