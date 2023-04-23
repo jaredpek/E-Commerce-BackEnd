@@ -39,6 +39,7 @@ class ListCreateItems(generics.ListCreateAPIView):
                 item = Item.objects.create(
                     name=data.get('name'), 
                     restaurant=restaurant, 
+                    price=data.get('price'),
                 )
                 item.item_type.set(data.getlist('item_type'))
                 return response.Response({'Success': 'Successfully added a new item'}, status.HTTP_201_CREATED)

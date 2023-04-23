@@ -1,6 +1,21 @@
 from rest_framework import generics, response, status
-from restaurant.serializers import RestaurantSerializer, CreateRestaurantSerializer
-from restaurant.models import Restaurant
+from restaurant.serializers import RestaurantTypeSerializer, RestaurantSerializer, CreateRestaurantSerializer
+from restaurant.models import RestaurantType, Restaurant
+
+class ListCreateRestaurantTypes(generics.ListCreateAPIView):
+    queryset = RestaurantType.objects.all()
+    serializer_class = RestaurantTypeSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = self.request.POST
+        restauranttype_serializer = RestaurantTypeSerializer(data=data)
+        if restauranttype_serializer.is_valid(raise_exception=True):
+            name = data.get('name')
+            RestaurantType.objects.create(
+                name=name.lower().strip()
+            )
+            return response.Response({'Success': 'New restaurant type created successfully'}, status.HTTP_201_CREATED)
+        return response.Response({'Error': restauranttype_serializer.errors}, status.HTTP_406_NOT_ACCEPTABLE)
 
 class ListCreateRestaurants(generics.ListCreateAPIView):
     queryset = Restaurant.objects.all()
