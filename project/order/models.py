@@ -6,7 +6,8 @@ from restaurant.models import Restaurant
 from item.models import Item
 
 class Order(models.Model):
-    completed = models.BooleanField(default=False)
+    status_choices = [(0, 'Ordering'), (1, 'Processing'), (2, 'Delivering'), (3, 'Completed')]
+    status = models.IntegerField(choices=status_choices, default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField(default=timezone.now)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
@@ -19,7 +20,7 @@ class Order(models.Model):
     total_cost = models.FloatField(validators=[MinValueValidator(0)], default=0)
 
     def __str__(self):
-        return f'{"Completed" if self.completed else "Incomplete"} | {self.user.username} | {self.restaurant.name} | {self.total_cost} | {self.to_address}'
+        return f'{self.status_choices[self.status][1]} | {self.user.username} | {self.restaurant.name} | {self.total_cost} | {self.to_address}'
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
