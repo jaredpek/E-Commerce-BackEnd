@@ -28,3 +28,8 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ['id', 'status', 'user', 'date', 'restaurant', 'items', 'from_address', 'from_postal_code', 'to_address', 'to_postal_code', 'items_subtotal', 'delivery_cost', 'total_cost']
         read_only_fields = ['id', 'user', 'date', 'restaurant']
+
+class UpdateOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['status', 'to_address', 'to_postal_code']
