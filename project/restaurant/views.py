@@ -33,13 +33,14 @@ class ListCreateRestaurants(generics.ListCreateAPIView):
         data = self.request.POST
         restaurant_serializer = CreateRestaurantSerializer(data=data)
         if restaurant_serializer.is_valid(raise_exception=True):
-            Restaurant.objects.create(
+            restaurant = Restaurant.objects.create(
                 owner=self.request.user,
                 name=data['name'],
                 delivery_charge=data['delivery_charge'],
                 address=data['address'],
                 postal_code=data['postal_code'],
             )
+            restaurant.restaurant_type.set(data.getlist('restaurant_type'))
             return response.Response({'Success': 'New restaurant created'}, status.HTTP_200_OK)
         return response.Response({'Error': [restaurant_serializer.errors]}, status.HTTP_406_NOT_ACCEPTABLE)
 
