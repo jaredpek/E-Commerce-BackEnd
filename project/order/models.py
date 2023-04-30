@@ -16,9 +16,9 @@ class Order(models.Model):
     
     def get_subtotal(self):
         subtotal = 0
-        for item in self.items:
+        for item in self.items.all():
             subtotal += item.total
-        return subtotal
+        return round(subtotal, 2)
 
     def __str__(self):
         return f'{self.status_choices[self.status][1]} | {self.user.username} | {self.restaurant.name} | {self.subtotal}'
@@ -28,7 +28,7 @@ class OrderItem(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     price = models.FloatField(validators=[MinValueValidator(0)])
     quantity = models.IntegerField(validators=[MinValueValidator(0)])
-    total = models.FloatField(validators=[MinValueValidator(0)])
+    total = models.FloatField(validators=[MinValueValidator(0)], default=0)
 
     def get_total(self):
         total = float(self.quantity) * float(self.price)
@@ -79,7 +79,8 @@ class Transaction(models.Model):
         return round(delivery_cost, 2)
     
     def get_total(self):
-        return self.subtotal + self.delivery
+        total = self.subtotal + self.delivery
+        return round(total, 2)
 
     def __str__(self):
-        return f'{self.user.username} | {self.restaurant.name} | {self.total}'
+        return f'{self.date} | {self.user.username} | {self.restaurant.name} | {self.total}'

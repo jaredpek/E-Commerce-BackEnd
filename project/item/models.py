@@ -16,4 +16,4 @@ class Item(models.Model):
     price = models.FloatField(validators=[MinValueValidator(0)])
 
     def __str__(self):
-        return f'{"Active" if self.active else "Not Active"} | {self.name} | {self.restaurant.name}'
+        return f'{"Active" if self.active else "Not Active"} | {self.name} | {self.restaurant.name} | {self.price}'

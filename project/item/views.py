@@ -1,15 +1,15 @@
 from rest_framework import generics, response, status
 from item.models import ItemType, Item
-from item.serializers import ItemTypeSerializer, ItemSerializer, CreateItemSerializer
+from item.serializers import ListCreateItemTypeSerializer, ListItemSerializer, CreateItemSerializer
 from restaurant.models import Restaurant
 
 class ListCreateItemTypes(generics.ListCreateAPIView):
     queryset = ItemType.objects.all()
-    serializer_class = ItemTypeSerializer
+    serializer_class = ListCreateItemTypeSerializer
 
     def post(self, request, *args, **kwargs):
         data = self.request.POST
-        itemtype_serailizer = ItemTypeSerializer(data=data)
+        itemtype_serailizer = ListCreateItemTypeSerializer(data=data)
         if itemtype_serailizer.is_valid(raise_exception=True):
             name = data.get('name')
             ItemType.objects.create(
@@ -20,14 +20,14 @@ class ListCreateItemTypes(generics.ListCreateAPIView):
 
 class ListCreateItems(generics.ListCreateAPIView):
     queryset = Item.objects.all()
-    serializer_class = ItemSerializer
+    serializer_class = ListItemSerializer
 
     def get_queryset(self):
         data = self.request.GET
-        if data.get('item_id'):
-            self.queryset = self.queryset.filter(id=data.get('item_id'))
-        if data.get('restaurant_id'):
-            self.queryset = self.queryset.filter(restaurant=data.get('restaurant_id'))
+        if data.get('id'):
+            self.queryset = self.queryset.filter(id=data.get('id'))
+        if data.get('restaurant'):
+            self.queryset = self.queryset.filter(restaurant=data.get('restaurant'))
         return self.queryset
 
     def post(self, request, *args, **kwargs):
@@ -49,11 +49,11 @@ class ListCreateItems(generics.ListCreateAPIView):
 
 class UpdateItems(generics.UpdateAPIView):
     queryset = Item.objects.all()
-    serializer_class = ItemSerializer
+    serializer_class = ListItemSerializer
     
     def put(self, request, *args, **kwargs):
         data = self.request.data
-        item_serializer = ItemSerializer(data=data)
+        item_serializer = ListItemSerializer(data=data)
         if item_serializer.is_valid(raise_exception=True):
             restaurant = Restaurant.objects.get(id=data.get('restaurant'))
             if self.request.user == restaurant.owner:

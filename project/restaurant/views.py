@@ -1,14 +1,14 @@
 from rest_framework import generics, response, status
-from restaurant.serializers import RestaurantTypeSerializer, RestaurantSerializer, CreateRestaurantSerializer
+from restaurant.serializers import ListCreateRestaurantTypeSerializer, ListRestaurantSerializer, CreateRestaurantSerializer
 from restaurant.models import RestaurantType, Restaurant
 
 class ListCreateRestaurantTypes(generics.ListCreateAPIView):
     queryset = RestaurantType.objects.all()
-    serializer_class = RestaurantTypeSerializer
+    serializer_class = ListCreateRestaurantTypeSerializer
 
     def post(self, request, *args, **kwargs):
         data = self.request.POST
-        restauranttype_serializer = RestaurantTypeSerializer(data=data)
+        restauranttype_serializer = ListCreateRestaurantTypeSerializer(data=data)
         if restauranttype_serializer.is_valid(raise_exception=True):
             name = data.get('name')
             RestaurantType.objects.create(
@@ -19,7 +19,7 @@ class ListCreateRestaurantTypes(generics.ListCreateAPIView):
 
 class ListCreateRestaurants(generics.ListCreateAPIView):
     queryset = Restaurant.objects.all()
-    serializer_class = RestaurantSerializer
+    serializer_class = ListRestaurantSerializer
 
     def get_queryset(self):
         params = self.request.GET
@@ -46,7 +46,7 @@ class ListCreateRestaurants(generics.ListCreateAPIView):
 
 class UpdateRestaurants(generics.UpdateAPIView):
     queryset = Restaurant.objects.all()
-    serializer_class = RestaurantSerializer
+    serializer_class = ListRestaurantSerializer
     
     def put(self, request, *args, **kwargs):
         data = self.request.POST
