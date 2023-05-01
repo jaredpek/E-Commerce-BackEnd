@@ -15,7 +15,7 @@ class Profile(models.Model):
     date_joined = models.DateField(default=timezone.now)
 
     def __str__(self):
-        return f'{self.user.username}'
+        return f'{self.pk} | {self.user.username}'
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

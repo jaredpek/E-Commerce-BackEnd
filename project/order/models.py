@@ -21,7 +21,7 @@ class Order(models.Model):
         return round(subtotal, 2)
 
     def __str__(self):
-        return f'{self.status_choices[self.status][1]} | {self.user.username} | {self.restaurant.name} | {self.subtotal}'
+        return f'{self.pk} | {self.status_choices[self.status][1]} | {self.user.username} | {self.restaurant.name} | {self.subtotal}'
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
@@ -35,7 +35,7 @@ class OrderItem(models.Model):
         return round(total, 2)
 
     def __str__(self):
-        return f'{self.order.user.username} | {self.order.restaurant.name} | {self.item.name} | {self.quantity} | {self.total}'
+        return f'{self.pk} | {self.order.user.username} | {self.order.restaurant.name} | {self.item.name} | {self.quantity} | {self.total}'
 
 class Transaction(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
@@ -83,4 +83,4 @@ class Transaction(models.Model):
         return round(total, 2)
 
     def __str__(self):
-        return f'{self.date} | {self.user.username} | {self.restaurant.name} | {self.total}'
+        return f'{self.pk} | {self.date} | {self.user.username} | {self.restaurant.name} | {self.total}'

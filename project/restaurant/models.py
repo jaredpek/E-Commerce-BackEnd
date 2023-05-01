@@ -6,7 +6,7 @@ class RestaurantType(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.pk} | {self.name}'
 
 class Restaurant(models.Model):
     active = models.BooleanField(default=True)
@@ -18,4 +18,4 @@ class Restaurant(models.Model):
     postal_code = models.CharField(max_length=6, validators=[RegexValidator('^\d{6}$')])
 
     def __str__(self):
-        return f'{"Active" if self.active else "Not Active"} | {self.name} | {self.address} {self.postal_code}'
+        return f'{self.pk} | {"Active" if self.active else "Not Active"} | {self.name} | {self.address} {self.postal_code}'

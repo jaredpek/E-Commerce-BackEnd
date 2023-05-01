@@ -6,7 +6,7 @@ class ItemType(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.pk} | {self.name}'
 
 class Item(models.Model):
     active = models.BooleanField(default=True)
@@ -16,4 +16,4 @@ class Item(models.Model):
     price = models.FloatField(validators=[MinValueValidator(0)])
 
     def __str__(self):
-        return f'{"Active" if self.active else "Not Active"} | {self.name} | {self.restaurant.name} | {self.price}'
+        return f'{self.pk} | {"Active" if self.active else "Not Active"} | {self.name} | {self.restaurant.name} | {self.price}'
